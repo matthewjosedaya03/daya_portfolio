@@ -1,0 +1,345 @@
+/* ==========================================================================
+   BASE.CSS
+   Design tokens, reset, typography, ambient background, and utilities.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+:root {
+    /* Core palette */
+    --bg: #400080;
+    --bg-deep: #210f66;
+    --bg-plum: #390a4a;
+
+    /* Surfaces and borders */
+    --surface: rgba(255, 255, 255, 0.055);
+    --surface-strong: rgba(255, 255, 255, 0.09);
+    --border: rgba(255, 255, 255, 0.12);
+    --border-strong: rgba(255, 255, 255, 0.24);
+
+    /* Text and accents */
+    --text: #f6f1ff;
+    --muted: #cbb8e6;
+    --accent: #c9a7ff;
+    --accent-strong: #e7d6ff;
+    --accent-2: #ffb4e6;
+    --danger: #ff9aa2;
+    --success: #8ef0c8;
+
+    /* Typography */
+    --font-head: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    /* Shape and depth */
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 28px;
+    --radius-pill: 999px;
+    --shadow-card: 0 24px 60px -30px rgba(10, 2, 30, 0.85);
+    --shadow-glow: 0 0 80px rgba(201, 167, 255, 0.16);
+
+    /* Layout */
+    --header-h: 76px;
+    --container: 1200px;
+    --gutter: 1.25rem;
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 16px);
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--text);
+    background-color: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+}
+
+ul,
+ol {
+    padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. Typography
+   -------------------------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-head);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    letter-spacing: -0.035em;
+}
+
+h2 {
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+}
+
+h3 {
+    font-size: 1.25rem;
+}
+
+p {
+    text-wrap: pretty;
+}
+
+strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.gradient-text {
+    background: linear-gradient(120deg, var(--accent-strong) 0%, var(--accent) 48%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   4. Ambient background
+   #400080 base with blurred radial blobs in #210f66 and #390a4a.
+   -------------------------------------------------------------------------- */
+.ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: var(--bg);
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.72;
+    will-change: transform;
+}
+
+.blob--a {
+    width: 55vw;
+    height: 55vw;
+    top: -16%;
+    left: -12%;
+    background: var(--bg-deep);
+    animation: drift-a 20s ease-in-out infinite alternate;
+}
+
+.blob--b {
+    width: 46vw;
+    height: 46vw;
+    top: 28%;
+    right: -18%;
+    background: var(--bg-plum);
+    animation: drift-b 24s ease-in-out infinite alternate;
+}
+
+.blob--c {
+    width: 42vw;
+    height: 42vw;
+    bottom: -22%;
+    left: 16%;
+    background: var(--bg-deep);
+    opacity: 0.58;
+    animation: drift-c 22s ease-in-out infinite alternate;
+}
+
+.blob--d {
+    width: 32vw;
+    height: 32vw;
+    bottom: 8%;
+    right: 12%;
+    background: var(--bg-plum);
+    opacity: 0.52;
+    animation: drift-a 26s ease-in-out infinite alternate-reverse;
+}
+
+/* Fine film grain to keep the large gradient from banding. */
+.ambient::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.055;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes drift-a {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(4%, 6%, 0) scale(1.08); }
+}
+
+@keyframes drift-b {
+    from { transform: translate3d(0, 0, 0) scale(1.05); }
+    to { transform: translate3d(-5%, -4%, 0) scale(1); }
+}
+
+@keyframes drift-c {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(6%, -5%, 0) scale(1.1); }
+}
+
+/* --------------------------------------------------------------------------
+   5. Layout utilities
+   -------------------------------------------------------------------------- */
+.container {
+    width: min(calc(100% - (var(--gutter) * 2)), var(--container));
+    margin-inline: auto;
+}
+
+.section {
+    position: relative;
+    padding-block: clamp(4.5rem, 10vw, 8rem);
+}
+
+.section-head {
+    max-width: 680px;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.section-head h2 {
+    margin-top: 0.35rem;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: var(--font-head);
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.eyebrow::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.section-note {
+    margin-top: 0.85rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   6. Accessibility helpers
+   -------------------------------------------------------------------------- */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 200;
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-strong);
+    color: #2a0d4f;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-160%);
+    transition: transform 0.25s var(--ease);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+::selection {
+    background: rgba(231, 214, 255, 0.35);
+    color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   7. Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
